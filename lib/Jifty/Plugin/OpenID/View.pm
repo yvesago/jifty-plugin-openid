@@ -79,17 +79,20 @@ template 'openid/create' => page {
 # MyOpenID login
 
 template 'openid/wayf' => sub {
+    my ( $self, $return_to ) = @_;
     div { attr { class => ''; };
         form {
             my $google = new_action( class => 'AuthenticateOpenID', moniker => 'authenticateopenid' );
             render_param($google, 'openid', render_as => 'hidden', default_value => 'www.google.com/accounts/o8/id');
+            render_param($google, 'ax_param', render_as => 'hidden', default_value => "openid.ns.ax=http://openid.net/srv/ax/1.0&openid.ax.mode=fetch_request&openid.ax.type.email=http://axschema.org/contact/email&openid.ax.type.firstname=http://axschema.org/namePerson/first&openid.ax.type.lastname=http://axschema.org/namePerson/last&openid.ax.required=firstname,lastname,email");
             render_param($google, 'ax_mapping', render_as => 'hidden', default_value => "{ 'email': 'value.email', 'name': 'value.firstname value.lastname (g)' }");
+            render_param($google, 'ax_values', render_as => 'hidden', default_value => "value.email,value.firstname,value.lastname" );
             render_param($google,'return_to', render_as => 'hidden', default_value => '/openid/verify_and_login');
             img { src is '/static/oidimg/FriendConnect.gif'; };
             outs_raw(
                 Jifty->web->return(
                 as_link => 1,
-                to => '/user',
+                to => $return_to,
                 label => _("Sign in with your Google Account"),
                 submit => $google
                 ));
@@ -105,7 +108,7 @@ template 'openid/wayf' => sub {
             outs_raw(
                 Jifty->web->return(
                 as_link => 1,
-                to => '/user',
+                to => $return_to,
                 label => _("Sign in with your Yahoo account"),
                 submit => $yahoo
                 ));
@@ -121,7 +124,7 @@ template 'openid/wayf' => sub {
             outs_raw(
                 Jifty->web->return(
                 as_link => 1,
-                to => '/user',
+                to => $return_to,
                 label => _("Sign in with your MyOpenID Account"),
                 submit => $myoid
                 ));

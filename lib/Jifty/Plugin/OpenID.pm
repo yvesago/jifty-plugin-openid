@@ -111,6 +111,8 @@ this parameters are usuable for all OpenID endpoints supporting Attribute
 Exchange extension. They can be overriden in your application. Watch and/or
 override C<openid/wayf> template from L<Jifty::Plugin::OpenID::View>.
 
+Or you can use in your view C<show('openid/wayf','/url_return_to');>.
+
 
 =head3 ax_param
 

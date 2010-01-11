@@ -26,7 +26,7 @@ use Jifty::Action schema {
     param 'openid' =>
         label is _('OpenID URL'),
         is mandatory,
-        hints is 'For example: you.livejournal.com';
+        hints is _('For example: you.livejournal.com');
 
     param 'ax_param' =>
         render as 'Hidden';
@@ -65,7 +65,7 @@ sub take_action {
     my $claimed_id = $csr->claimed_identity( $openid );
 
     if ( not defined $claimed_id ) {
-        $self->result->error(_("Invalid OpenID URL.  Please check to make sure it is correct.  (@{[$csr->err]})"));
+        $self->result->error(_("Invalid OpenID URL.  Please check to make sure it is correct.  (%1)",@{[$csr->err]}));
         return;
     }
 

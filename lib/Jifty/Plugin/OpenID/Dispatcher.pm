@@ -47,7 +47,7 @@ on 'openid/verify_and_link' => run {
         }
         else {
             $user->user_object->link_to_openid( $openid );
-            $result->message(_("The OpenID '$openid' has been linked to your account."));
+            $result->message(_("The OpenID '%1' has been linked to your account.",$openid));
         }
     }
     redirect '/';

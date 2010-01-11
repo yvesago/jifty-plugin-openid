@@ -22,7 +22,7 @@ template '/' => page {
             };
         };
     };
-    show 'openid/wayf';
+    show 'openid/wayf', '/';
 };
 
 
