@@ -4,7 +4,7 @@ use warnings;
 package Jifty::Plugin::OpenID;
 use base qw/Jifty::Plugin/;
 
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
 =head1 NAME
 
@@ -18,9 +18,7 @@ Provides OpenID authentication for your app
 
 =head2 Config
 
-First add the C<OpenID> plugin to the list of plugins in F<etc/config.yml>.
-
-Please provide C<OpenIDSecret> in your F<etc/config.yml> , the C<OpenIDUA> is
+please provide C<OpenIDSecret> in your F<etc/config.yml> , the C<OpenIDUA> is
 B<optional> , OpenID Plugin will use L<LWPx::ParanoidAgent> by default.
 
     --- 
@@ -97,13 +95,53 @@ so that you will need to implement a template called C</openid_verify_done>:
         h1 { "Done" };
     };
 
+=head2 Attribute Exchange
+
+You can retrieve informations from remote profile on authentication server with
+ OpenID Attribute Exchange service extension.
+
+Set in your config.yml
+
+    - OpenID:
+       ax_param: openid.ns.ax=http://openid.net/srv/ax/1.0&openid.ax.mode=fetch_request&openid.ax.type.email=http://axschema.org/contact/email&openid.ax.type.firstname=http://axschema.org/namePerson/first&openid.ax.type.lastname=http://axschema.org/namePerson/last&openid.ax.required=firstname,lastname,email
+       ax_values: value.email,value.firstname,value.lastname
+       ax_mapping: "{ 'email': 'value.email', 'name': 'value.firstname value.lastname' }"
+
+this parameters are usuable for all OpenID endpoints supporting Attribute
+Exchange extension. They can be overriden in your application. Watch and/or
+override C<openid/wayf> template from L<Jifty::Plugin::OpenID::View>.
+
+
+=head3 ax_param
+
+is the url send to authentication server. It defines namespace, mode, attributes
+types and requested attributes.
+
+hints : MyOpenID use schema.openid.net schemas instead of axschema.org, Google
+provides lastname and firstname, Yahoo only fullname
+
+=head3 ax_values
+
+keys of attributes values read from authentication server response.
+
+=head3 ax_mapping
+
+mapping of recieve values with our applicalication fields in json format.
+
 =cut
+
+__PACKAGE__->mk_accessors(qw(ax_mapping ax_values ax_param));
 
 sub init {
     my $self = shift;
     my %opt = @_;
     my $ua_class = $self->get_ua_class;
     eval "require $ua_class";
+    $self->ax_param($opt{ax_param});
+    $self->ax_mapping($opt{ax_mapping});
+    $self->ax_values($opt{ax_values});
+
+    Jifty->web->add_css('openidplugin.css');
 }
 
 sub get_ua_class {
@@ -144,11 +182,11 @@ sub get_csr {
 
 =head1 AUTHORS
 
-Alex Vandiver, Cornelius  <cornelius.howl {at} gmail.com >
+Alex Vandiver, Cornelius  <cornelius.howl {at} gmail.com >, Yves Agostini
 
 =head1 LICENSE
 
-Copyright 2005-2009 Best Practical Solutions, LLC.
+Copyright 2005-2010 Best Practical Solutions, LLC.
 
 This program is free software and may be modified and distributed under the same terms as Perl itself.
 

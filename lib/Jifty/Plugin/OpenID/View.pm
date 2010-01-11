@@ -45,7 +45,7 @@ template 'openid/login' => page {
 };
 
 template 'openid/create' => page {
-    title is 'Set your username';
+    title is _('Set your username');
     my ( $action, $next ) = get( 'action', 'next' );
 
     p {
@@ -61,10 +61,72 @@ template 'openid/create' => page {
         );
     };
     Jifty->web->form->start( call => $next , name => 'openid-user-create' );
-    render_action($action);
+    my $openidSP = Jifty->web->session->get('ax_mapping');
+    if ($openidSP) {
+        foreach my $param (keys %$openidSP) {
+            # keep get to use validation
+            render_param($action, $param, default_value => get($param) );
+        }
+    }
+    else {
+        render_action($action);
+        };
     form_submit( label => _('Continue'), submit => $action );
     Jifty->web->form->end;
 };
 
+# optionnal fragment to add direct links to Google, Yahoo,
+# MyOpenID login
+
+template 'openid/wayf' => sub {
+    div { attr { class => ''; };
+        form {
+            my $google = new_action( class => 'AuthenticateOpenID', moniker => 'authenticateopenid' );
+            render_param($google, 'openid', render_as => 'hidden', default_value => 'www.google.com/accounts/o8/id');
+            render_param($google, 'ax_mapping', render_as => 'hidden', default_value => "{ 'email': 'value.email', 'name': 'value.firstname value.lastname (g)' }");
+            render_param($google,'return_to', render_as => 'hidden', default_value => '/openid/verify_and_login');
+            img { src is '/static/oidimg/FriendConnect.gif'; };
+            outs_raw(
+                Jifty->web->return(
+                as_link => 1,
+                to => '/user',
+                label => _("Sign in with your Google Account"),
+                submit => $google
+                ));
+        };
+        form {
+            my $yahoo = new_action( class => 'AuthenticateOpenID', moniker => 'authenticateopenid' );
+            render_param($yahoo, 'openid', render_as => 'hidden', default_value => 'me.yahoo.com');
+            render_param($yahoo, 'ax_param', render_as => 'hidden', default_value => "openid.ns.ax=http://openid.net/srv/ax/1.0&openid.ax.mode=fetch_request&openid.ax.type.email=http://axschema.org/contact/email&openid.ax.type.fullname=http://axschema.org/namePerson&openid.ax.required=fullname,email");
+            render_param($yahoo, 'ax_mapping', render_as => 'hidden', default_value => "{ 'email': 'value.email', 'name': 'value.fullname (y)' }");
+            render_param($yahoo, 'ax_values', render_as => 'hidden', default_value => "value.email,value.fullname" );
+            render_param($yahoo,'return_to', render_as => 'hidden', default_value => '/openid/verify_and_login');
+            img { src is '/static/oidimg/yfavicon.gif'; };
+            outs_raw(
+                Jifty->web->return(
+                as_link => 1,
+                to => '/user',
+                label => _("Sign in with your Yahoo account"),
+                submit => $yahoo
+                ));
+        };
+        form {
+            my $myoid = new_action( class => 'AuthenticateOpenID', moniker => 'authenticateopenid' );
+            render_param($myoid, 'openid', render_as => 'hidden', default_value => 'www.myopenid.com');
+            render_param($myoid, 'ax_param', render_as => 'hidden', default_value => "openid.ns.ax=http://openid.net/srv/ax/1.0&openid.ax.mode=fetch_request&openid.ax.type.email=http://schema.openid.net/contact/email&openid.ax.type.nickname=http://schema.openid.net/namePerson/friendly&openid.ax.required=nickname,email");
+            render_param($myoid, 'ax_mapping', render_as => 'hidden', default_value => "{ 'email': 'value.email.1', 'name': 'value.nickname.1 (m)' }");
+            render_param($myoid, 'ax_values', render_as => 'hidden', default_value => "value.email.1,value.nickname.1" );
+            render_param($myoid,'return_to', render_as => 'hidden', default_value => '/openid/verify_and_login');
+            img { src is '/static/oidimg/myopenid.png'; };
+            outs_raw(
+                Jifty->web->return(
+                as_link => 1,
+                to => '/user',
+                label => _("Sign in with your MyOpenID Account"),
+                submit => $myoid
+                ));
+        };
+    };
+};
 
 1;

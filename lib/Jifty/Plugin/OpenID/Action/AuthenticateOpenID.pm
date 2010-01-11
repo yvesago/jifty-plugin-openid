@@ -28,6 +28,15 @@ use Jifty::Action schema {
         is mandatory,
         hints is 'For example: you.livejournal.com';
 
+    param 'ax_param' =>
+        render as 'Hidden';
+
+    param 'ax_values' =>
+        render as 'Hidden';
+
+    param 'ax_mapping' =>
+        render as 'Hidden';
+
     param 'return_to' =>
         render as 'Hidden',
         default is '/openid/verify_and_login';
@@ -39,10 +48,16 @@ Creates local user if non-existant and redirects to OpenID auth URL
 
 =cut
 
+use Jifty::JSON qw /jsonToObj/;
+
 sub take_action {
     my $self   = shift;
     my $openid = $self->argument_value('openid');
     my $path   = $self->argument_value('return_to');
+    my $plugin = Jifty->find_plugin('Jifty::Plugin::OpenID');
+    my $ax_mapping   = $self->argument_value('ax_mapping') || $plugin->ax_mapping();
+    my $ax_param   = $self->argument_value('ax_param') || $plugin->ax_param();
+    my $ax_values   = $self->argument_value('ax_values') || $plugin->ax_values();
 
     my $baseurl = Jifty->web->url;
     my $csr = Jifty::Plugin::OpenID->get_csr( required_root => $baseurl );
@@ -67,8 +82,11 @@ sub take_action {
                         trust_root => $baseurl,
                         delayed_return => 1
                     );
+    Jifty->web->session->set(ax_mapping => jsonToObj($ax_mapping));
+    Jifty->web->session->set(ax_values => $ax_values);
+    $ax_param = '&'.$ax_param if $ax_param !~ m/^&/;
 
-    Jifty->web->_redirect( $check_url . '&openid.sreg.optional=nickname' );
+    Jifty->web->_redirect( $check_url . '&openid.sreg.optional=nickname'.$ax_param );
     return 1; # should never get here
 }
 
