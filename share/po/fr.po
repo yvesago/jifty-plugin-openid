@@ -60,6 +60,10 @@ msgstr "Par exemple: you.livejournal.com"
 msgid "OpenID verification failed.  It looks like you cancelled the OpenID verification request."
 msgstr "La vérification OpenID a échouée. Vous avez peut-être annulé la demande de vérification."
 
+#: ../../lib/Jifty/Plugin/OpenID/View.pm:72
+msgid "A link to confirm this email will be sent to receive later notifications."
+msgstr "Un message pour confirmer cet email vous sera envoyé."
+
 #: ../../lib/Jifty/Plugin/OpenID/Action/VerifyOpenID.pm:57
 msgid "OpenID verification failed: "
 msgstr "Vérification OpenId échouée: "

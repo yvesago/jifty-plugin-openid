@@ -66,6 +66,11 @@ template 'openid/create' => page {
         foreach my $param (keys %$openidSP) {
             # keep get to use validation
             render_param($action, $param, default_value => get($param) );
+            div { class is "form_field";
+                span { class is "hints";
+                    outs( _( 'A link to confirm this email will be sent to receive later notifications.' ) );
+                }
+            } if ($param eq 'email');
         }
     }
     else {

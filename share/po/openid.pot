@@ -27,6 +27,10 @@ msgstr ""
 msgid "If the username provided conflicts with an existing username or contains invalid characters, you will have to give us a new one."
 msgstr ""
 
+#: ../../lib/Jifty/Plugin/OpenID/View.pm:72
+msgid "A link to confirm this email will be sent to receive later notifications."
+msgstr ""
+
 #: ../../lib/Jifty/Plugin/OpenID/View.pm:27
 msgid "If you have a Livejournal or other OpenID account, you don't even need to sign up. Just log in."
 msgstr ""
