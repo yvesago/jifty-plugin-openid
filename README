@@ -99,6 +99,8 @@ USAGE
     Watch and/or override "openid/wayf" template from
     Jifty::Plugin::OpenID::View.
 
+    Or you can use in your view "show('openid/wayf','/url_return_to');".
+
    ax_param
     is the url send to authentication server. It defines namespace, mode,
     attributes types and requested attributes.
