@@ -128,7 +128,7 @@ keys of attributes values read from authentication server response.
 
 =head3 ax_mapping
 
-mapping of recieve values with your application fields in json format.
+mapping of receive values with your application fields in json format.
 
 =cut
 
