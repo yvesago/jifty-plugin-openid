@@ -4,7 +4,7 @@ use warnings;
 package Jifty::Plugin::OpenID;
 use base qw/Jifty::Plugin/;
 
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 =head1 NAME
 
@@ -97,7 +97,7 @@ so that you will need to implement a template called C</openid_verify_done>:
 
 =head2 Attribute Exchange
 
-You can retrieve informations from remote profile on authentication server with
+You can retrieve information from remote profile on authentication server with
  OpenID Attribute Exchange service extension.
 
 Set in your config.yml
@@ -128,7 +128,7 @@ keys of attributes values read from authentication server response.
 
 =head3 ax_mapping
 
-mapping of recieve values with our applicalication fields in json format.
+mapping of recieve values with your application fields in json format.
 
 =cut
 

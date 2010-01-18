@@ -84,7 +84,7 @@ sub take_action {
                     );
     Jifty->web->session->set(ax_mapping => jsonToObj($ax_mapping));
     Jifty->web->session->set(ax_values => $ax_values);
-    $ax_param = '&'.$ax_param if $ax_param !~ m/^&/;
+    $ax_param = '&'.$ax_param if $ax_param && $ax_param !~ m/^&/;
 
     Jifty->web->_redirect( $check_url . '&openid.sreg.optional=nickname'.$ax_param );
     return 1; # should never get here

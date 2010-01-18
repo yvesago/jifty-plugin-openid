@@ -9,8 +9,10 @@ requires('Cache::FileCache');
 #requires('Test::OpenID::Server' );
 requires('LWPx::ParanoidAgent');
 
+install_share;
+
 auto_install();
-#tests('t/*.t t/*/t/*.t');
-tests('t/*.t');
+tests('t/*.t t/*/t/*.t');
+#tests('t/*.t');
 
 WriteAll;
