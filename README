@@ -84,7 +84,7 @@ USAGE
         };
 
   Attribute Exchange
-    You can retrieve informations from remote profile on authentication
+    You can retrieve information from remote profile on authentication
     server with OpenID Attribute Exchange service extension.
 
     Set in your config.yml
@@ -112,8 +112,7 @@ USAGE
     keys of attributes values read from authentication server response.
 
    ax_mapping
-    mapping of recieve values with our applicalication fields in json
-    format.
+    mapping of recieve values with your application fields in json format.
 
 AUTHORS
     Alex Vandiver, Cornelius <cornelius.howl {at} gmail.com >, Yves Agostini
